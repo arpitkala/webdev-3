@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Carousel & Joke App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      color: #2c3e50;
+    }
+
+    .carousel-container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .carousel-container img {
+      width: 100%;
+      display: none;
+      border-radius: 12px;
+      transition: opacity 0.5s ease;
+    }
+
+    .carousel-container img.active {
+      display: block;
+    }
+
+    .buttons {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    button {
+      padding: 10px 18px;
+      margin: 0 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .joke-section {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    .joke-section h2 {
+      color: #2d3436;
+      margin-bottom: 15px;
+    }
+
+    #joke {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    @media screen and (max-width: 768px) {
+      header h1 {
+        font-size: 1.8em;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 8px 14px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .carousel-container {
+        width: 95%;
+      }
+
+      .joke-section {
+        width: 90%;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌟 Interactive Carousel & Joke Generator 🎉</h1>
+  </header>
+
+  <!-- Carousel Section -->
+  <div class="carousel-container">
+    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" class="active" alt="Mountain">
+    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Ocean">
+    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80" alt="Forest">
+  </div>
+
+  <div class="buttons">
+    <button onclick="prevImage()">⏮️ Previous</button>
+    <button onclick="nextImage()">Next ⏭️</button>
+  </div>
+
+  <!-- Joke Section -->
+  <div class="joke-section">
+    <h2>😂 Need a Laugh?</h2>
+    <p id="joke">Click the button below to fetch a random joke.</p>
+    <button onclick="getJoke()">Tell Me a Joke 😄</button>
+  </div>
+
+  <script>
+    // Carousel functionality
+    const images = document.querySelectorAll('.carousel-container img');
+    let currentIndex = 0;
+
+    function showImage(index) {
+      images.forEach((img, i) => {
+        img.classList.toggle('active', i === index);
+      });
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      showImage(currentIndex);
+    }
+
+    function prevImage() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showImage(currentIndex);
+    }
+
+    // Joke API
+    async function getJoke() {
+      try {
+        const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+        const data = await res.json();
+        document.getElementById('joke').innerText = `${data.setup} — ${data.punchline}`;
+      } catch (error) {
+        document.getElementById('joke').innerText = "Oops! Couldn't fetch a joke. Try again.";
+      }
+    }
+  </script>
+</body>
+</html>
